@@ -4,7 +4,7 @@ export const removeStopWord = (docOrQuery) => {
   let words = docOrQuery.split(" ");
   words.forEach((word) => {
     stopWordList.indexOf(word) > 0
-      ? (docOrQuery = docOrQuery.replace(new RegExp("\\b" + word + "\\b", "gi"), "\b"))
+      ? (docOrQuery = docOrQuery.replace(new RegExp( word , "gi"), ""))
       : null;
   });
 

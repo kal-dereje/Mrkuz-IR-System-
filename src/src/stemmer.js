@@ -74,10 +74,17 @@ function removePrefix(word) {
 
       for (const suffix of suffixList) {
       
-        if (suffix.length == 1) { // && word.lastIndexOf(suffix) < word.length - 1
+        if (suffix.length == 1 && prefix !='ከ' ) { // && word.lastIndexOf(suffix) < word.length - 1
           
           isPrefix =true
-        } else if (
+        }
+        else if(prefix =='ከ' && word.indexOf(suffix)> 2 && preRemoved.length-suffix.length <3){
+          console.log(word);
+          isPrefix = false;
+          break;
+        }
+        
+        else if (
           // (suffix.length > 1 && suffix!='ች' )&&
           
           word.lastIndexOf(suffix) > 1 &&
@@ -128,7 +135,7 @@ function removePrefix(word) {
   return word;
 }
 
-//suffix remover
+//infix remover
 function removeInfix(word) {
   let wordLength = word.length;
 
@@ -273,6 +280,7 @@ function removeSuffix(word) {
             if(alphabet[key][5] ==word[lastSecondIndex] || alphabet[key][6] ==word[lastSecondIndex]){
               word = word.substring(0,word.length-1)
             }
+            
             else if (alphabet[key][4] == word[lastSecondIndex]) {
               
               word = word.substring(0, word.lastIndexOf(suffix));

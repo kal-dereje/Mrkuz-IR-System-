@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import Merkuze from "./Merkuze";
-import SearchResult from "./SerachResult";
+import SearchResult from "./SearchResult";
+import Merkuze from "./Mrkuz";
 
 
 function App() {

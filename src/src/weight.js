@@ -1,22 +1,17 @@
 import { stemmer } from "./stemmer.js";
 import { documents } from "./documents/documents.js";
 //collection of documents
-let documnetCollection = {};
-// let documnetCollection = {
-//   doc1 :"shipment of gold damaged in a fire",
-//   doc2 :"delivery of silver arrived in a silver truck",
-//   doc3 :"Shipment of gold arrived in a truck",
-// }
+let documentCollection = {};
+
 const regex = /\s+/g;
 
 for (const key in documents)
-  documnetCollection[key] = stemmer(documents[key])
+ { documentCollection[key] = stemmer(documents[key])
     .join(" ")
     .replace(regex, " ")
-    .trim();
+    .trim();}
 
-// console.log(documnetCollection);
-
+console.log("asdfasdfsdaf",documentCollection);
 //function that calculate the term frequency
 function termFrequency(document) {
   let arrayDocument = document.split(" ");
@@ -39,15 +34,15 @@ function termFrequency(document) {
   return objDocument;
 }
 
-function iDF(documnetCollection, oneDocObj) {
-  let docLength = Object.keys(documnetCollection).length;
+function iDF(documentCollection, oneDocObj) {
+  let docLength = Object.keys(documentCollection).length;
   let docIdfObj = {};
 
   let counter = 0;
   for (const key in oneDocObj) {
-    for (const doc in documnetCollection)
+    for (const doc in documentCollection)
       if (doc != "query")
-        if (documnetCollection[doc].indexOf(key) >= 0) counter++;
+        if (documentCollection[doc].indexOf(key) >= 0) counter++;
 
     docIdfObj[key] = parseFloat(
       Math.log2((docLength - 1) / counter).toPrecision(3)
@@ -58,8 +53,8 @@ function iDF(documnetCollection, oneDocObj) {
   return docIdfObj;
 }
 
-function compositeWeight(documnetCollection, query) {
-  let tempDocumentCollection = { ...documnetCollection };
+function compositeWeight(documentCollection, query) {
+  let tempDocumentCollection = { ...documentCollection };
   tempDocumentCollection["query"] = query;
   let composite = {};
   let docResult = {};
@@ -122,25 +117,31 @@ function rankRelevantDocument(weightedDocument) {
   return rankedDocument;
 }
 
-
+// The function takes a query as input and returns a list of relevant documents
 export const result = (query) => {
+  // The query is first stemmed, cleaned, and trimmed
   query = stemmer(query).join(" ").replace(regex, " ").trim();
+  // If the query is not empty, the function continues
   if (query != "") {
-    let weightedDocument = compositeWeight(documnetCollection, query);
+    // The weighted document is calculated using the composite weight method
+    let weightedDocument = compositeWeight(documentCollection, query);
 
+    // The relevant documents are ranked based on their weight
     let rankedDocument = rankRelevantDocument(weightedDocument);
 
-    console.log(rankedDocument);
-
+    // The ranked documents are sorted in descending order based on their weight
     let rankedDocumentDesc = Object.keys(rankedDocument).sort((a, b) => {
       return rankedDocument[b] - rankedDocument[a];
     });
 
+    // The documents are retrieved and stored in an array
     let result = rankedDocumentDesc.map((doc) => {
       if (documents[doc] != undefined) return documents[doc];
     });
+    // The array of relevant documents is returned
     return result;
   }
-
-  return []
+  // If the query is empty, an empty array is returned
+  return [];
 };
+
